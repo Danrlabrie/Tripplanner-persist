@@ -24,9 +24,9 @@ router2.get('/api/days', function(req, res) {
 
 router2.get('/api/days/:id', function(req, res) {
     Day.findById(req.params.id)
-    .then(function(day) {
+    .then(function(days) {
         res.render('days', {
-        singleday: day
+        all_days: days
       });
     })
 })
@@ -63,7 +63,7 @@ router2.post('/api/days/:id', function(req, res) {
 router2.post('/api/days/:id/hotel', function(req, res) {
    Day.findById(req.params.id)
     .then(function(day) {
-        
+
         res.render('days', {
         singleday: day
       });
