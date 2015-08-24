@@ -9,6 +9,7 @@ $(document).ready(function() {
     activities:  all_activities
   };
 
+
   function findByTypeAndId (type, id) {
     var attractions = attractionsByType[type],
         selected;
@@ -36,5 +37,7 @@ $(document).ready(function() {
         id = $button.data('id');
     daysModule.removeAttraction(findByTypeAndId(type, id));
   });
+
+
 
 });

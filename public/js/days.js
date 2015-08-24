@@ -11,12 +11,14 @@ var daysModule = (function(){
       }],
       currentDay = days[0];
 
+
   function addDay () {
-    days.push({
+      days.push({
       hotels: [],
       restaurants: [],
       activities: []
     });
+    postday();
     renderDayButtons();
     switchDay(days.length - 1);
   }
@@ -36,6 +38,8 @@ var daysModule = (function(){
     var index = days.indexOf(currentDay);
     days.splice(index, 1);
     switchDay(index);
+    console.log(index);
+    deleteday(index);
   }
 
   function renderDayButtons () {
@@ -54,7 +58,9 @@ var daysModule = (function(){
   exports.addAttraction = function(attraction) {
     if (currentDay[attraction.type].indexOf(attraction) !== -1) return;
     currentDay[attraction.type].push(attraction);
+    
     renderDay(currentDay);
+
   };
 
   exports.removeAttraction = function (attraction) {
@@ -80,6 +86,39 @@ var daysModule = (function(){
   function itineraryHTML (attraction) {
     return '<div class="itinerary-item><span class="title>' + attraction.name + '</span><button data-id="' + attraction._id + '" data-type="' + attraction.type + '" class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
   }
+
+  var getdays = function () { 
+    $.get('/api/days', function (data) {
+      console.log(data)
+      data.forEach( function(day) {
+        days.push(day)
+      })
+      renderDayButtons();
+    })
+    .fail( function (err) {
+      console.error('err', err)
+    });
+  }
+
+  var postday = function () {
+    $.post('/api/days')
+    .done(function( data ) {
+    console.log( data );
+  });
+  }
+
+  var deleteday = function (id) {
+    $.ajax({
+    url: '/api/days/' + id + '',
+    type: 'DELETE',
+    success: function(result) {
+        console.log("Success!" + result)
+    }
+    });
+  }
+
+getdays();
+// if(days.length === 1) postday();
 
   $(document).ready(function(){
     switchDay(0);
