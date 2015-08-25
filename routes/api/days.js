@@ -19,7 +19,6 @@ var numDays = 0;
 
 Day.find().then(function (days) {
   numDays = days.length;
-  console.log(numDays)
 })  
 
 // get all days --working!
@@ -68,23 +67,22 @@ router2.post('/api/days', function(req, res, next) {
 ///////////////// create specifics on days ////////////////////
 
 
-// // create new Hotel on day
-
+// // create new Hotel on day --working
+ 
 router2.post('/api/days/:id/hotel', function(req, res, next) {
 
  Day.findOne({
    number: req.params.id
  }).exec(function(err, day) {
    if (err) return err
-   console.log(req.body.hotelId)
    day.hotel = req.body.hotelId;
    day.save();
  });
- res.send('ddd');
+ res.end();
 });
 
 
-// // create new Restaurant on day
+// // create new Restaurant on day --working
 
 router2.post('/api/days/:id/restaurants', function(req, res) {
  Day.findOne({
@@ -96,11 +94,11 @@ router2.post('/api/days/:id/restaurants', function(req, res) {
    }
    day.save();
  })
- res.send('ddd');
+ res.end();
 });
 
 
-// // create new Activity on day
+// // create new Activity on day --working
 
 router2.post('/api/days/:id/activities', function(req, res) {
  Day.findOne({
@@ -112,7 +110,7 @@ router2.post('/api/days/:id/activities', function(req, res) {
    }
    day.save();
  });
- res.send('ddd');
+ res.end();
 });
 
 // //////////////////////////////////////////////////////////////
@@ -120,32 +118,51 @@ router2.post('/api/days/:id/activities', function(req, res) {
 // ////////////////// delete specifics on days /////////////////
 
 
-// delete hotel on day
+// delete hotel on day --working
 
 router2.delete('/api/days/:id/hotel', function(req, res) {
-    Day.findOne({ number: Number(req.params.id)}).exec().then(function (day, err) {
-    day.hotel = "";
-  })
-})
+    console.log("hit hotel delete!")
+    Day.findOne({ number: Number(req.params.id)}).exec(function (err, day) {
+     if (err) return err;
+     var newday = day.toObject()
+     day.remove()
+     delete newday.hotel;
+     replacementday = new Day(newday)
+     replacementday.save();
+ });
+ res.end();
+});
 
 // delete restaurant on day
 
 router2.delete('/api/days/:id/restaurants', function(req, res) {
-     Day.findOne({ number: Number(req.params.id)}).exec().then(function (day, err) {
+    console.log("hit rest delete!")
+    Day.findOne({ number: Number(req.params.id)}).exec(function (err, day) {
+     if (err) return err;
+      if(day) { 
       day.restaurants.forEach(function (rest) {
-        if(rest._id === req.body.restaurantId) restaurants.splice(restaurants.indexOf(rest),1)
-   });
-  });
+      if(rest._id === req.body.restaurantId) restaurants.splice(restaurants.indexOf(rest),1)
+     });
+     day.save();
+   }
+ });
+ res.end();
 });
 
 // delete activity on day
 
 router2.delete('/api/days/:id/activities', function(req, res) {
-    Day.findOne({ number: Number(req.params.id)}).exec().then(function (day, err) {
-      day.activities.forEach(function (act) {
-        if(act._id === req.body.activitiesId) activities.splice(activities.indesxOf(rest),1)
-      });
-   });
+    console.log("hit rest delete!")
+    Day.findOne({ number: Number(req.params.id)}).exec(function (err, day) {
+     if (err) return err;
+      if(day) { 
+      day.restaurants.forEach(function (rest) {
+      if(rest._id === req.body.activitiesId) activities.splice(activities.indexOf(rest),1)
+     });
+     day.save();
+   }
+ });
+ res.end();
 });
 
 

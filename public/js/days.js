@@ -58,7 +58,15 @@ var daysModule = (function(){
   exports.addAttraction = function(attraction) {
     if (currentDay[attraction.type].indexOf(attraction) !== -1) return;
     currentDay[attraction.type].push(attraction);
-    
+    if (attraction.type === 'hotels') {
+    $.post('/api/days/' + days.indexOf(currentDay) + '/hotel' + '', {hotelId:  attraction._id})
+    }
+    else if (attraction.type === 'restaurants') {
+    $.post('/api/days/' + days.indexOf(currentDay) + '/restaurants' + '', {restaurantId:  attraction._id })
+    }
+    else if (attraction.type === 'activities') {
+    $.post('/api/days/' + days.indexOf(currentDay) + '/activities' + '', {activitiesId:  attraction._id })
+    }
     renderDay(currentDay);
 
   };
